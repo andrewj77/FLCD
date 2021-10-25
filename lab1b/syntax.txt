@@ -1,0 +1,21 @@
+﻿program = cmpdstmt
+declaration = arraydecl | type “ “ IDENTIFIER
+type = “int” | “string”
+arraydecl = type “ “ IDENTIFIER “[“integer”]”
+cmpdstmt = “{“ stmtList “}”
+stmtlist = stmt | stmt ";" stmtlist
+stmt = simplstmt | structstmt
+simplstmt = (assignstmt | iostmt | declaration) “;”
+assignstmt = IDENTIFIER "=" expression
+expression = expression (“+”|”-“) term | term
+term = term (“*”|”/”) factor | factor
+factor = "(" expression ")" | IDENTIFIER | integer | arrayelem
+arrayelem = IDENTIFIER “[“integer”]”
+iostmt = (“cin” “>>” IDENTIFIER) | (“cout” “<<” (IDENTIFIER | CONSTANT))
+structstmt = cmpdstmt | ifstmt | whilestmt | forstmt
+ifstmt = "if" condition “{“ stmt “}” [ else “{“ stmt “}”]
+whilestmt = "while" condition "{" stmt “}”
+forstmt = “for” “(“ assignstmt “;” condition “;” assignstmt “)” “{“ stmt “}”
+condition = “(“ expression RELATION expression “)”
+RELATION = "<" | "<=" | "==" | "!=" | ">=" | ">"
+
