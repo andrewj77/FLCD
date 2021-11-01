@@ -1,0 +1,14 @@
+int n, c, r;
+cin >> n;
+c = n; 
+t = 0;
+while (n>0) {
+t = t*10 + n%10; 
+n = n/10;
+}
+if (c == t) {
+	  cout << 'Given number is palindrome';
+}
+else {
+cout << 'Given number is not palindrome';
+}

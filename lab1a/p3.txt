@@ -1,0 +1,12 @@
+int sum;
+sum = 0; 
+cin >> n;
+int arr[n]; int c = 0;
+while (c < n) {
+int el;
+cin >> el;
+arr[c] = el;
+}
+while (c < n) {
+sum = sum + arr[c];
+}

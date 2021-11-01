@@ -38,7 +38,7 @@ class HashTable:
         node = self.__content[index]
         if node is None:
             self.__content[index] = Node(key)
-            return
+            return self.get_position(key)
         last = node
         pos = 0
         while node is not None:
@@ -48,6 +48,7 @@ class HashTable:
             node = node.next
             pos += 1
         last.next = Node(key)
+        return self.get_position(key)
 
     def remove(self, key):
         index = self.hash(key)

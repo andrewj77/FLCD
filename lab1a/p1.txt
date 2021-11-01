@@ -1,0 +1,16 @@
+int a, b, c;
+cin >> a;
+cin >> b;
+cin >> c;
+int min, max; 
+max = 0;
+min = 9999999;
+if (a>b) {
+max = a; min = b;
+}
+else {
+max = b; 
+min = a;
+}
+if (c>max) { max = c; } 
+if (c<min) { min = c; }
