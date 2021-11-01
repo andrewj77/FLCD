@@ -52,9 +52,13 @@ class Scanner:
             elif self.can_be_operator(char):
                 if len(elem) > 0:
                     tokens.append(elem)
-                op, position = self.extract_operator(line, position)
-                tokens.append(op)
-                elem = ''
+                if char in ['+', '-'] and (tokens[-1] != ' ' and not tokens[-1].isnumeric() or tokens[-1] == ' ' and not tokens[-2].isnumeric()):
+                    elem = char
+                    position += 1
+                else:
+                    op, position = self.extract_operator(line, position)
+                    tokens.append(op)
+                    elem = ''
             else:
                 elem += char
                 position += 1
