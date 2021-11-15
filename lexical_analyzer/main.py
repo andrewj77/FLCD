@@ -1,6 +1,7 @@
 from SymbolTable import ST
 from Scanner import Scanner
 from ProgramInternalForm import PIF
+from finite_automata.FiniteAutomata import FA
 import re
 
 
@@ -44,6 +45,8 @@ class Parser:
 
     def run(self):
         file = '../lab1a/p1.txt'
+        faC = FA('./constant_fa.txt')
+        faI = FA('./identifier_fa.txt')
         error = ''
         with open(file, 'r') as program:
             lines = 0
@@ -54,10 +57,10 @@ class Parser:
                     if tokens[i] in self.separators + self.operators + self.reserved:
                         if tokens[i] != ' ':
                             self.PIF.add(tokens[i], (-1, -1))
-                    elif self.is_identifier(tokens[i]):
+                    elif faI.is_valid_sequence(tokens[i]):  # self.is_identifier(tokens[i]):
                         idd = self.ST.add(tokens[i])
                         self.PIF.add("id", idd)
-                    elif self.is_constant(tokens[i]):
+                    elif faC.is_valid_sequence((tokens[i])):  # self.is_constant(tokens[i]):
                         const = self.ST.add(tokens[i])
                         self.PIF.add("const", const)
                     else:
