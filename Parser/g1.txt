@@ -1,0 +1,7 @@
+N = S A B
+Σ = a b
+q0 = S
+P =
+S -> aB | bA
+A -> a | aS | bA
+B -> b | bS | aB
