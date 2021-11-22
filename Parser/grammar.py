@@ -37,3 +37,19 @@ class Grammar:
 
     def get_productions(self):
         return self.__productions
+
+    def get_productions_for(self, terminal):
+        if terminal not in self.__terminals:
+            return None
+        return self.__productions[terminal]
+
+    def check_cfg(self):
+        for key in self.__productions:
+            if key not in self.__non_terminals:
+                return False
+            for val in self.__productions[key]:
+                for elem in val:
+                    for char in elem:
+                        if char not in self.__non_terminals and char not in self.__terminals:
+                            return False
+        return True
