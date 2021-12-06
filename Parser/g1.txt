@@ -1,7 +1,6 @@
-N = S A B
+N = S A
 Σ = a b
 S = S
 P =
-S -> aB | bA
-A -> a | aS | bA
-B -> b | bS | aB
+S -> AA
+A -> aA | b
