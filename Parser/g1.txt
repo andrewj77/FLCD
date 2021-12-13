@@ -2,5 +2,5 @@ N = S A
 Σ = a b
 S = S
 P =
-S -> AA
-A -> aA | b
+S -> aA
+A -> bA | c

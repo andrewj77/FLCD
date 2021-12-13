@@ -56,8 +56,47 @@ class Parser:
                     closures = self.go_to(key, tr)
                     if closures not in states and closures not in queue and closures != {}:
                         queue.append(closures)
-        for s in states:
-            print(s)
+        self.parsing_table(states)
+
+    def parsing_table(self, states):
+        table = {}
+        prods = []
+        for k in self.__productions:
+            for l2 in self.__productions[k]:
+                prods.append(l2)
+        for index in range(len(states)):
+            table[index] = ('', [])
+        for index, state in enumerate(states):
+            for key in state:
+                transitions = state[key]
+                for transition in transitions:
+                    di = transition.index('.')
+                    if di == len(transition) - 1:
+                        prod = ''
+                        for el in transition:
+                            if el != '.':
+                                prod += el
+                        if prod == 'S':
+                            table[index] = ('ACCEPT', [])
+                        else:
+                            for index2, prod2 in enumerate(prods):
+                                if prod2 == prod and table[index][0] == '':
+                                    table[index] = ('REDUCE' + str(index2+1), [])
+                                elif prod2 == prod:
+                                    if index2 != int(table[index][0][-1]):
+                                        print('Error! Conflict at state ' + str(index))
+                                        return {}
+                    else:
+                        after_dot = transition[di+1]
+                        closures = self.go_to(key, transition)
+                        for index2, state2 in enumerate(states):
+                            if state2 == closures:
+                                if table[index][0] == '':
+                                    table[index] = ('SHIFT', [])
+                                l = table[index][1]
+                                l.append((after_dot, index2))
+        print(table)
+
 
 
     @staticmethod
@@ -69,7 +108,7 @@ class Parser:
     def shift_dot(transition):
         di = transition.index('.')
         if not Parser.can_shift(transition):
-            print('Cannot shift')
+            # print('Cannot shift')
             return {}
         if len(transition) > di + 2:
             r = transition[di + 2:]
