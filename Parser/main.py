@@ -1,5 +1,5 @@
-from grammar import Grammar
-from parser import Parser
+from grammar_file import Grammar
+from parser_file import Parser
 
 grammar = Grammar('g1.txt')
 

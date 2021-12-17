@@ -9,8 +9,7 @@ class Parser:
         self.build_augmented_grammar()
         self.first_closure = {"S'": [self.__augmented_grammar["S'"][0]]}
         self.closure(self.first_closure, self.__augmented_grammar["S'"][0])
-        # print(self.__augmented_grammar)
-        # print(self.first_closure)
+
         self.canonical_collection()
 
     def build_augmented_grammar(self):
@@ -56,7 +55,26 @@ class Parser:
                     closures = self.go_to(key, tr)
                     if closures not in states and closures not in queue and closures != {}:
                         queue.append(closures)
-        self.parsing_table(states)
+
+        parsing_table = self.parsing_table(states)
+        productions_string = self.parse(parsing_table)
+        print(productions_string)
+
+        derivation_string = ""
+        output = ""
+        for current_production_index in productions_string:
+            production_index = 0
+            for nt in self.__productions:
+                for production in self.__productions[nt]:
+                    production_index += 1
+                    if production_index == current_production_index:
+                        if output == "":
+                            output += production
+                        else:
+                            output = self.rreplace(output, nt, production, 1)
+                        derivation_string += output + " -> "
+        derivation_string = derivation_string[:-4]
+        print(derivation_string)
 
     def parsing_table(self, states):
         table = {}
@@ -95,8 +113,59 @@ class Parser:
                                     table[index] = ('SHIFT', [])
                                 l = table[index][1]
                                 l.append((after_dot, index2))
-        print(table)
+        return table
 
+    def parse(self, parsing_table):
+        sequence = input("Give sequence: ")
+        print(sequence)
+        print(self.__productions)
+        print(parsing_table)
+
+        work_stack = [0]
+        input_stack = sequence
+        output_band = []
+
+        action = parsing_table[work_stack[-1]][0]
+        while action != 'ACCEPT':
+            print(action)
+
+            if action == 'SHIFT':
+                work_stack.append(input_stack[0])
+                input_stack = input_stack[1:]
+
+                for item in parsing_table[work_stack[-2]][1]:
+                    if item[0] == work_stack[-1]:
+                        work_stack.append(item[1])
+                        break
+
+                print(work_stack)
+                print(input_stack)
+
+            if action[:-1] == 'REDUCE':
+                production_index = 0
+                for nt in self.__productions:
+                    for production in self.__productions[nt]:
+                        production_index += 1
+                        if production_index == int(action[-1]):
+                            print(production)
+                            output_band.append(production_index)
+
+                            work_stack = work_stack[:(-1*2*len(production))]
+                            work_stack.append(nt)
+                            for item in parsing_table[work_stack[-2]][1]:
+                                if item[0] == work_stack[-1]:
+                                    work_stack.append(item[1])
+                                    break
+
+                            print(work_stack)
+
+            action = parsing_table[work_stack[-1]][0]
+
+        return output_band[::-1]
+
+    @staticmethod
+    def get_action():
+        pass
 
 
     @staticmethod
@@ -116,8 +185,7 @@ class Parser:
             r = []
         return transition[:di] + [transition[di+1]] + ['.'] + r
 
-
-
-
-
-
+    @staticmethod
+    def rreplace(input_string, old, new, occurrence):
+        li = input_string.rsplit(old, occurrence)
+        return new.join(li)
